@@ -1,3 +1,4 @@
+from http.client import InvalidURL
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlparse
 from urllib.request import Request, urlopen
@@ -35,6 +36,8 @@ class GitHubService:
         try:
             with urlopen(request, timeout=30) as response:
                 return response.read().decode("utf-8")
+        except InvalidURL as exc:
+            raise ValueError("GitHub reference contains invalid URL characters.") from exc
         except HTTPError as exc:
             detail = exc.read().decode("utf-8", errors="replace")
             raise RuntimeError(

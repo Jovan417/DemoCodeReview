@@ -10,7 +10,13 @@ class CodeReviewRequest(BaseModel):
     )
     branch: str = Field(default="main", min_length=1, max_length=120)
     pull_request_number: int | None = Field(default=None, ge=1)
-    commit_sha: str | None = Field(default=None, min_length=7, max_length=64)
+    commit_sha: str | None = Field(
+        default=None,
+        min_length=7,
+        max_length=64,
+        pattern=r"^[0-9a-fA-F]+$",
+        description="Git commit SHA or abbreviated SHA, for example a1b2c3d.",
+    )
     diff: str | None = Field(
         default=None,
         description="Raw git diff. If provided, the API reviews this directly.",
